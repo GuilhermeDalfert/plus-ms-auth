@@ -61,4 +61,4 @@ npm run dev
 
 ## Executando com a stack completa
 
-Este serviço é orquestrado pelo `plus-infra`. Consulte o [README do plus-infra](../plus-infra/README.md).
+Este serviço é orquestrado pelo `plus-infra`. Consulte o [README do plus-infra](https://github.com/pucrs-sweii-2026-1-30/plus-infra).
