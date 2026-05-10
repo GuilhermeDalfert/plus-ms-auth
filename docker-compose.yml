@@ -1,0 +1,32 @@
+services:
+  postgres-auth:
+    container_name: postgres
+    image: postgres:17
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+  auth:
+    image: maven:3.9-eclipse-temurin-17
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: sh -c "sh mvnw spring-boot:run"
+    ports:
+      - "3001:8080"
+    environment:
+      DB_URL: jdbc:postgresql://postgres-auth:5432/postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      JWT_SECRET: lSI2bN2LPIuwHW0yicOS
+      SEED_ADMIN_ENABLED: "true"
+      SEED_ADMIN_USERNAME: admin
+      SEED_ADMIN_EMAIL: admin@gmail.com
+      SEED_ADMIN_PASSWORD: admin123
+    depends_on:
+      - postgres-auth
+volumes:
+  postgres-data:
+    driver: local
