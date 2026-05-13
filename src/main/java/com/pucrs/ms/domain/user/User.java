@@ -1,13 +1,20 @@
 package com.pucrs.ms.domain.user;
 
-import jakarta.persistence.*;
+import java.util.Collection;
+import java.util.List;
+
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
-import java.util.List;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Table(name = "users")
 @Entity
@@ -62,6 +69,18 @@ public class User implements UserDetails {
 
     public UserRole getRole() {
         return role;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
     }
 
     @Override

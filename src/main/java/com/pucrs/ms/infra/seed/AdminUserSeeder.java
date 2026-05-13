@@ -19,7 +19,7 @@ public class AdminUserSeeder implements CommandLineRunner {
     @Value("${app.seed.admin.username:admin}")
     private String username;
 
-    @Value("${app.seed.admin.email:admin@gmail.com}")
+    @Value("${app.seed.admin.email:admin@plus.local}")
     private String email;
 
     @Value("${app.seed.admin.password:admin123}")
