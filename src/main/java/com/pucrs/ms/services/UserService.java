@@ -52,6 +52,14 @@ public class UserService implements UserDetailsService {
         return toDTO(newUser);
     }
 
+    @Transactional
+    public void deleteUser(String id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        userRepository.delete(user);
+    }
+
     public UserDTO me(String accessToken) {
         var email = tokenService.validateToken(accessToken);
         if (email == null || email.isBlank()) {
