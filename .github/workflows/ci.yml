@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U postgres -d postgres"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      DB_URL: jdbc:postgresql://localhost:5432/postgres
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      JWT_SECRET: test-secret-ci
+      SEED_ADMIN_ENABLED: "true"
+      SEED_ADMIN_USERNAME: admin
+      SEED_ADMIN_EMAIL: admin@gmail.com
+      SEED_ADMIN_PASSWORD: admin123
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Dar permissão ao Maven Wrapper
+        run: chmod +x mvnw
+
+      - name: Rodar testes
+        run: ./mvnw test
+
+      - name: Gerar pacote
+        run: ./mvnw clean package -DskipTests
