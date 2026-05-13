@@ -33,7 +33,7 @@ jobs:
       JWT_SECRET: test-secret-ci
       SEED_ADMIN_ENABLED: "true"
       SEED_ADMIN_USERNAME: admin
-      SEED_ADMIN_EMAIL: admin@gmail.com
+      SEED_ADMIN_EMAIL: admin@plus.local
       SEED_ADMIN_PASSWORD: admin123
 
     steps:
