@@ -3,6 +3,7 @@ package com.pucrs.ms.services;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -75,7 +76,12 @@ public class UserService implements UserDetailsService {
             }
             user.setEmail(data.email());
         }
-        if (data.role() != null) user.setRole(data.role());
+        if (data.role() != null) {
+            if (isSelf(user) && data.role() != user.getRole()) {
+                throw new RuntimeException("Você não pode alterar seu próprio cargo");
+            }
+            user.setRole(data.role());
+        }
 
         return toDTO(userRepository.save(user));
     }
@@ -96,6 +102,12 @@ public class UserService implements UserDetailsService {
 
     public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream().map(this::toDTO).toList();
+    }
+
+    private boolean isSelf(User target) {
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        if (auth == null || !(auth.getPrincipal() instanceof User principal)) return false;
+        return principal.getId().equals(target.getId());
     }
 
     private UserDTO toDTO(User user) {
