@@ -27,6 +27,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
+    @Operation(summary = "Deleta um usário pelo id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Usuário removido com sucesso"),
             @ApiResponse(responseCode = "401", description = "Usuário não autenticado"),
