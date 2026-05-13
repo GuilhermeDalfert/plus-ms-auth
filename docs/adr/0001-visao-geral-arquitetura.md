@@ -23,4 +23,4 @@ O serviço foi implementado com Spring Boot, usando camadas típicas de `control
 ## Alternativas consideradas
 - Não há evidência no código de uso de arquiteturas alternativas, como gRPC ou event-driven.
 - A opção por Spring Boot é predominante e consistente com dependências do `pom.xml`.
-- A confirmar: se haveria necessidade futura de uma camada de API Gateway ou serviço de descoberta.
+- **API Gateway**: já existe no projeto — provisionado pelo `plus-infra-grupo05` via Terraform contra o ministack (LocalStack), expondo as rotas `/auth/{login,refresh,logout,me}`. Serviço de descoberta segue como possibilidade futura caso o número de microsserviços cresça.

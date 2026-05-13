@@ -19,8 +19,13 @@ O microsserviço fornece endpoints de autenticação e gerenciamento de usuário
   - `PATCH /users/{id}`
 - Uso de JWT para access tokens com expiração curta (15 minutos).
 - Uso de refresh tokens persistidos em banco para renovação de sesssões por 7 dias.
-- Autorização baseada em roles; somente `ADMIN` pode registrar usuários ou gerenciar contas de usuários.
-- CORS configurado para permitir qualquer origem, métodos e headers.
+- Autorização baseada em roles, conforme `SecurityConfiguration.java`:
+  - `POST /auth/login`, `POST /auth/refresh`, `POST /auth/logout` — públicos.
+  - `POST /auth/register` — restrito a `ADMIN`.
+  - `GET /auth/me` — qualquer usuário autenticado.
+  - `GET /users` — qualquer usuário autenticado (`hasAnyRole("ADMIN", "USER")`).
+  - `PATCH /users/**` e `DELETE /users/**` — restritos a `ADMIN`.
+- CORS configurado para permitir qualquer origem e qualquer header (`allowedOriginPatterns("*")`, `allowedHeaders("*")`), com `allowCredentials(true)`. Métodos liberados são fixos: `GET, POST, PUT, PATCH, DELETE, OPTIONS`.
 - Swagger UI disponível em `/swagger-ui.html` e OpenAPI JSON em `/v3/api-docs`.
 - CSRF desabilitado devido ao modelo stateless de autenticação.
 - Containerização com Docker e Docker Compose para PostgreSQL e serviço Java.
@@ -36,4 +41,4 @@ O microsserviço fornece endpoints de autenticação e gerenciamento de usuário
 ## Alternativas consideradas
 - Não há código indicando uso de OAuth2 ou OpenID Connect; a implementação atual usa JWT customizado.
 - Não há implementação de refresh token em cookies; a solução usa corpo de requisição e storage no banco.
-- A confirmar: mecanismo de logout e token blacklisting para access tokens não está claramente definido no código.
+- **Logout**: implementado em `AuthenticationController.logout()` recebendo o refresh token no body e delegando a revogação para `AuthenticationService.logout()`. Sem blacklist de **access tokens** — eles permanecem válidos até expirar (15 min). A mitigação de roubo se apoia na curta janela de expiração + revogação do refresh token.
